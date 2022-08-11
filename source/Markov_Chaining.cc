@@ -9,50 +9,52 @@ std::ostream& operator<<(std::ostream &outs, const Markov_Chaining &m) {
 	for (const Vertex &v : m.graph) {
 		outs << v;
 	}
-	outs << "Total Start Count: " << m.total_start_count << std::endl;
+	outs << "\n\tTotal Start Count: " << m.total_start_count << std::endl;
 	return outs;
 }
-
-//File Parsing AKA: Markovify
-Markov_Chaining::Markov_Chaining(std::string filename) {
-	std::ifstream file(filename);
-	if (!file) {
-		std::cout << "File: " << filename << " doesn't exist." << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
-	//Load text from the file - uppercase each word read
+//Private function: Basically Turns the constructor into a overrated helper
+bool Markov_Chaining::cache_check(std::string filename) {
 	source_file = filename;
-	parse_filename(source_file);
+	reverse_parse_filename(source_file);
 	std::string cache_file = "cache/";
 	cache_file += source_file;
 
     std::ifstream cache(cache_file);
 	if(cache) {
 		std::string userinput;
-		std::cout << "Cache file detected, do you want to use it?" << std::endl;
-		std::cout << "it skips pharsing, making it faster to generate songs." << std::endl;
-		std::cout << "Please skip if file has been changed since last used" << std::endl;
-		std::cout << "Y / N: ";
+		std::cout << "\tCache file detected, do you want to use it?" << std::endl;
+		std::cout << "\tit skips pharsing, making it faster to generate songs." << std::endl;
+		std::cout << "\tPlease skip if file has been changed since last used" << std::endl;
+		std::cout << "\tY / N: ";
 		std::cin >> userinput;
+		std::cout << std::endl;
 		uppercaseify(userinput);
 		if(userinput == "YES" || userinput == "Y") {
-			recover_graph();
-			return;
+			return true;
 		}
 	}
-    
+	return false;
+}
+
+void Markov_Chaining::build_graph(std::string filename) {
+	std::ifstream file(filename);
+	if (!file) {
+		std::cout << "File: " << filename << " doesn't exist." << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	//Load text from the file - uppercase each word read
     while (true) {
 		std::string s = readline(file);
-		uppercaseify(s);
-		stripUnicode(s);
-		strip_brackets(s);
-		strip_parenthesis(s); 
+		tokenize(s);
 		if (!file) break;
 		if (!s.size()) continue;
 		std::stringstream sts(s);
 		bool first_word = true;
 		size_t last_index = INT_MAX;
+		if(!graph.empty()) {
+			combined = true;
+			last_index = graph.size()-1;
+		}
 		while (true) {
 			bool comma_follows = false;
 			std::string word = read(sts); //Read a word from the line
@@ -109,16 +111,28 @@ Markov_Chaining::Markov_Chaining(std::string filename) {
 			}
 		}
 	}
+	file.close();
 	//Sanity check that we read in at least one sentence
 	if (total_start_count == 0) {
 		std::cout << "No sentences read, exiting program" << std::endl;
 		exit(1);
 	}
 }
+
+//File Parsing AKA: Markovify
+Markov_Chaining::Markov_Chaining(std::string filename) {
+	//Check for cache! if cache exist and the user accepts stops the constructor
+	if(cache_check(filename)) {
+		recover_graph();
+		return;
+	}
+	//Build the graph then!
+	build_graph(filename);
+}
 //The Sentence generation, 
 void Markov_Chaining::sentence_generation(){
-		const int sentences = read("How many sentences do you wish to make?\n");
-		const int64_t sneed = read("Please enter the random seed:\n");
+		const int sentences = read("\tHow many sentences do you wish to make? ");
+		const int64_t sneed = read("\tPlease enter the random seed: ");
 			
 		srand(sneed);
 
@@ -135,7 +149,7 @@ void Markov_Chaining::sentence_generation(){
 			}
 			std::string temp = cur.word;
 			first_cap(temp);
-			std::cout << temp;
+			std::cout << "\t" << temp;
 			//Generate sentence, since we have to 
 			while (true) {
 				//Roll to see if we end the sentence here or pick a random word
@@ -164,6 +178,7 @@ void Markov_Chaining::sentence_generation(){
 				}
 			}
 		}
+		std::cout << "\n";
 }
 
 void Markov_Chaining::save_file(){
@@ -184,12 +199,15 @@ void Markov_Chaining::save_file(){
 		}
 		outs << std::endl;
 	}
-	outs << "TSC: 8";
-	outs << std::endl;
+
+	outs << "TSC: " << total_start_count << std::endl;
 	outs.close();
-	std::cout << "Saving complete\n";
+	screen_wipe();
+	std::cout << "\tSaving complete\n";
 }
+
 void Markov_Chaining::recover_graph(){
+	//Assumes this is a new graph
 	std::string recovered_file = "cache/";
 	recovered_file += source_file;
 
@@ -227,25 +245,35 @@ void Markov_Chaining::recover_graph(){
 	}
 	//Sanity check that we read in at least one sentence
 	if (total_start_count == 0) {
-		std::cout << "No sentences read, exiting program" << std::endl;
+		std::cout << "\tNo sentences read, exiting program......" << std::endl;
 		exit(1);
 	}
+}
+
+void Markov_Chaining::stats_graph(){ 
+	//Traverse and pick the most common word,
+	//most common ending word,
+	//followed by a comma the most often,
+	//and most common word to begin with.
 }
 void main_menu(Markov_Chaining &markov){
 	bool breakLoop = true;
 	while(breakLoop) {
-		std::cout << "1. Print Graph and Quit\n";
-		std::cout << "2. Generate Random Lyrics\n";
-		std::cout << "3. Save graph\n";
-		std::cout << "4. To clear the screen\n";
-		std::cout << "5. Exit Program\n";
-		int choice = read("Select one of the options above: ");
+		std::cout << "\t1. Print Graph and Quit\n";
+		std::cout << "\t2. Generate Random Lyrics\n";
+		std::cout << "\t3. Save graph\n";
+		std::cout << "\t4. To clear the screen\n";
+		std::cout << "\t5. Combine files\n";
+		std::cout << "\t6. Exit Program\n";
+		int choice = read("\tSelect one of the options above: ");
 		switch (choice)
 		{
 			case 1:
+				screen_wipe();
 				std::cout << markov << std::endl;
 				break;
 			case 2:
+				screen_wipe();
 				markov.sentence_generation();
 				break;
 			case 3:
@@ -255,9 +283,13 @@ void main_menu(Markov_Chaining &markov){
 				screen_wipe();
 				break;
 			case 5:
-				std::cout << "Exiting" << std::endl;
+				markov.build_graph(filehandler());
+				break;
+			case 6:
+				std::cout << "\n\tExiting..." << std::endl;
 				breakLoop = false;
 				break;
+
 			default:
 				break;
 		}

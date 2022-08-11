@@ -2,7 +2,7 @@ CC = g++
 CC_FLAGS = -std=c++2a -O3 
 CLS = clear
 SC = source/
-OBJ = objects/
+OBJ = source/objects/
 
 all:
 	${CC} ${CC_FLAGS} -c ${SC}*.cc

@@ -16,14 +16,17 @@ class Markov_Chaining {
 		std::vector<Vertex> graph; //Holds each word and who it's connected to via adjacency list
 		std::string source_file; //Holds the source of the file. 
 		long long total_start_count = 0; //Holds how many sentences we've read
+		bool combined = false;
+		bool cache_check(std::string);
 	public:
 		Markov_Chaining() = delete;
-		Markov_Chaining(std::string file);
+		Markov_Chaining(std::string);
 		void save_file();
 		void recover_graph();
+		void build_graph(std::string);
 		//TODO: Generate stats from the file
-		void combine_graph();
-		void stats_graph(); 
+		void stats_graph();
+		//END OF TODO:
 		void sentence_generation();
 		long long get_total_start_count() { return total_start_count; }
 		Vertex& operator[](size_t index);
@@ -31,5 +34,5 @@ class Markov_Chaining {
 };
 
 //Function Prototypes:
-void main_menu(Markov_Chaining &markov);
+void main_menu(Markov_Chaining&);
 #endif
