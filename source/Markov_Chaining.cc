@@ -1,10 +1,5 @@
 #include "headers/Markov_Chaining.hpp"
 
-//Index Overload: Gets the value at a index using the [] operator
-Vertex& Markov_Chaining::operator[](size_t index) {
-	return graph.at(index);
-}
-
 //Print Overload: Prints out the whole graph
 std::ostream& operator<<(std::ostream &outs, const Markov_Chaining &m) {
 	for (const Vertex &v : m.graph) {
@@ -235,6 +230,7 @@ void Markov_Chaining::recover_graph(){
 		v.comma_count = int(read(sts));
 		hash[main_word] = index;
 		index++;
+		//We getting edgy
 		while(true){
 			std::string edge_word = read(sts);
 			if(edge_word.empty()) break;
@@ -253,56 +249,64 @@ void Markov_Chaining::recover_graph(){
 	}
 }
 
-void Markov_Chaining::stats_graph(){ 
-	
-	//most common word to begin with.
+void Markov_Chaining::stats_graph(){
+	//Using Edges, since its already a custom data type that holds a string and integer value
+	//most common word to begin with
 	Edge common_beginning;
+	common_beginning.word = graph[0].word;
+	common_beginning.weight = graph[0].start_count;
 	//most common edge
 	Edge common_edge;
+	common_edge.word = graph[0].edges[0].word;
+	common_edge.weight = graph[0].edges[0].weight;
 	//Has the most edges
 	Edge greatest_weight; 
-	//most common word,
+	greatest_weight.word = graph[0].word;
+	greatest_weight.weight = graph[0].total_edge_weight;
+	//most common word
 	Edge common_word;
-	//most common ending word,
+	common_word.word = graph[0].word;
+	common_word.weight = graph[0].count;
+	//most common ending word
 	Edge common_ending; 
+	common_ending.word = graph[0].word;
+	common_ending.weight = (graph[0].count - graph[0].total_edge_weight);
 
 	//Traverse and pick
 	for(Vertex &v : graph) {
-		if(common_beginning.word.empty()) 
-			common_beginning.word = v.word, common_beginning.weight = v.start_count;
-		if(greatest_weight.word.empty()) 
-			greatest_weight.word = v.word, greatest_weight.weight = v.total_edge_weight;
-		if(common_ending.word.empty()) 
-			common_ending.word = v.word, common_ending.weight = (v.count - v.total_edge_weight);
-		if(common_word.word.empty()) 
-			common_word.word = v.word, common_word.weight = v.count;
-
-		if((v.count - v.total_edge_weight) > common_ending.weight) 
-			common_ending.word = v.word, common_ending.weight = (v.count - v.total_edge_weight);
-		if(v.start_count > common_beginning.weight) 
-			common_beginning.word = v.word, common_beginning.weight = v.start_count;
-		if(v.total_edge_weight > greatest_weight.weight) 
-			greatest_weight.word = v.word, greatest_weight.weight = v.total_edge_weight;
-		if(v.count > common_word.weight) 
-			common_word.word = v.word, common_word.weight = v.count;
-
+		if((v.count - v.total_edge_weight) > common_ending.weight) {
+			common_ending.word = v.word;
+			common_ending.weight = (v.count - v.total_edge_weight);
+		}
+		if(v.start_count > common_beginning.weight) {
+			common_beginning.word = v.word;
+			common_beginning.weight = v.start_count;
+		}
+		if(v.total_edge_weight > greatest_weight.weight) {
+			greatest_weight.word = v.word;
+			greatest_weight.weight = v.total_edge_weight;
+		}
+		if(v.count > common_word.weight) {
+			common_word.word = v.word;
+			common_word.weight = v.count;
+		}
 		for(Edge &e : v.edges) {
-			if(common_edge.word.empty()) common_edge.word = e.word, common_edge.weight = e.weight;
-			if(e.weight > common_edge.weight) common_edge.word = e.word, common_edge.weight = e.weight;
+			if(e.weight > common_edge.weight) 
+				common_edge.word = e.word, common_edge.weight = e.weight;
 		}
 	}
-	std::cout << std::endl;
-	std::cout << "\tThe most common word: '" << common_word.word 
-			  << "' with a count of: " << common_word.weight << "!\n";
+
+
 	std::cout << "\tThe most word with the most weight: '" << greatest_weight.word 
 			  << "' with a total edge weight of: " << greatest_weight.weight << "!\n";
 	std::cout << "\tThe most common beginning word: '" << common_beginning.word 
 			  << "' with a start count of: " << common_beginning.weight << "!\n";
 	std::cout << "\tThe most common ending word: '" << common_ending.word 
 			  << "' with a count of: " << common_ending.weight << "!\n";
+	std::cout << "\n\tThe most common word: '" << common_word.word 
+			  << "' with a count of: " << common_word.weight << "!\n";
 	std::cout << "\tThe most edge word: '" << common_edge.word 
-			  << "' with a count of: " << common_edge.weight << "!\n";
-	std::cout << std::endl;
+			  << "' with a count of: " << common_edge.weight << "!\n\n";
 }
 
 void main_menu(Markov_Chaining &markov){

@@ -20,7 +20,7 @@ class Markov_Chaining {
 		std::unordered_map<std::string ,size_t> hash; //Holds the index (in vec) of each word we've read
 		std::vector<Vertex> graph; //Holds each word and who it's connected to via adjacency list
 		std::string source_file; //Holds the source of the file. 
-		long long total_start_count = 0; //Holds how many sentences we've read
+		size_t total_start_count = 0; //Holds how many sentences we've read
 		bool combined = false;
 		bool cache_check(std::string);
 	public:
@@ -31,8 +31,7 @@ class Markov_Chaining {
 		void build_graph(std::string);
 		void stats_graph();
 		void sentence_generation();
-		long long get_total_start_count() { return total_start_count; }
-		Vertex& operator[](size_t index);
+		size_t get_total_start_count() { return total_start_count; }
 		friend std::ostream &operator<<(std::ostream &outs, const Markov_Chaining &m);
 };
 

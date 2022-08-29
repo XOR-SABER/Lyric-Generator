@@ -6,8 +6,11 @@
 #include <vector>
 #include <iostream>
 
-//Custom Headers
-#include "Edge.hpp"
+//Custom data type: To hold words and weights 
+struct Edge {
+	std::string word; //The word we're connected to
+	unsigned int weight = 0; //How often they follow us
+};
 
 //Adjacency List style graph
 struct Vertex {
@@ -19,5 +22,7 @@ struct Vertex {
 	std::vector<Edge> edges; //Holds the words we're connected to, and how often they follow us, like {PEAR,3}
 };
 
+//Overloads,
+std::ostream &operator<<(std::ostream &outs,const Edge &e);
 std::ostream &operator<<(std::ostream &outs,const Vertex &v);
 #endif

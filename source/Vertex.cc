@@ -1,5 +1,10 @@
 #include "headers/Vertex.hpp"
 
+std::ostream &operator<<(std::ostream &outs,const Edge &e) {
+    outs << "\t\t " << e.word << ": " << e.weight;
+    return outs;
+}
+
 std::ostream &operator<<(std::ostream &outs,const Vertex &v) {
 	outs << "\tVertex: '" << v.word << "' - Count: " << v.count <<
 		" TEW: " << v.total_edge_weight <<
@@ -8,7 +13,7 @@ std::ostream &operator<<(std::ostream &outs,const Vertex &v) {
 		" Comma Count: " << v.comma_count << 
 		" Edges: " << v.edges.size() << std::endl;
 	for (const Edge &e : v.edges) {
-		outs << "\t\t " << e.word << ": " << e.weight << std::endl;
+		outs << e << std::endl;
 	}
 	return outs;
 }
