@@ -6,9 +6,9 @@ std::ostream &operator<<(std::ostream &outs,const Vertex &v) {
 		" Start Count: " << v.start_count <<
 		" End Count: " << (v.count - v.total_edge_weight) <<
 		" Comma Count: " << v.comma_count << 
-		" Edges:" << std::endl;
+		" Edges: " << v.edges.size() << std::endl;
 	for (const Edge &e : v.edges) {
-		outs << "\t\t" << e.word << ": " << e.weight << std::endl;
+		outs << "\t\t " << e.word << ": " << e.weight << std::endl;
 	}
 	return outs;
 }

@@ -1,23 +1,22 @@
 #include "headers/Markov_Functions.hpp"
 #include "headers/read.h"
-#include <iostream>
-#include <filesystem>
 
 //Utility functions for changing the case on words
 
-//Helper Function
-//TODO: Add a faster Tonkenizer O(4N) -> O(N)
+// Any way fuck that helper function, here's the O(N) one
 void tokenize(std::string &str) {
-	uppercaseify(str);
-	stripUnicode(str);
-	strip_brackets(str);
-	strip_parenthesis(str); 
-}
-
-
-//Check for non-unicode characters
-bool invalidChar (char c) { 
-	return !(c>= 0 && c<128); 
+	std::string retval;
+	bool deleting = false;
+	for (size_t i = 0; i < str.size(); i++) {
+		if (str[i] == '[' || str[i] == '(') deleting = true;
+		else if (str[i] == ']' || str[i] == ')') deleting = false;
+		else if (!deleting){
+			if(!invalidChar(str[i])) {
+			retval.push_back(std::toupper(str[i]));
+			}
+		}
+	}
+	str = retval;
 }
 
 //Turn misc/mario.txt -> misc/
@@ -50,62 +49,6 @@ void reverse_parse_filename(std::string &str) {
 	str = retval;
 }
 
-//Gets rid of any and all Unicode Characters
-void stripUnicode(std::string & str) { 
-    str.erase(std::remove_if(str.begin(),str.end(), invalidChar), str.end());  
-}
-
-//Turn food -> FOOD
-void uppercaseify(std::string &s) {
-	for (char &c : s) c = std::toupper(c);
-}
-//Turn FOOD -> food
-void lowercaseify(std::string &s) {
-	for (char &c : s) c = std::tolower(c);
-}
-//Turn FOOD -> Food, for starting a sentence
-void first_cap(std::string &s) {
-	if (!s.size()) return;
-	for (char &c : s) c = std::tolower(c);
-	s.at(0) = std::toupper(s.at(0));
-}
-
-//Eliminates all words between square brackets to remove informative lines in lyrics
-void strip_brackets(std::string &s) {
-	std::string retval;
-	bool deleting = false;
-	for (size_t i = 0; i < s.size(); i++) {
-		if (s[i] == '[') deleting = true;
-		else if (s[i] == ']') deleting = false;
-		else if (!deleting) retval.push_back(s[i]);
-	}
-	s = retval;
-}
-
-
-// I added this since parenthesis look really messy and lead to non white space characters
-void strip_parenthesis(std::string &s) {
-	std::string retval;
-	bool deleting = false;
-	for (size_t i = 0; i < s.size(); i++) {
-		if (s[i] == '(') deleting = true;
-		else if (s[i] == ')') deleting = false;
-		else if (!deleting) retval.push_back(s[i]);
-	}
-	s = retval;
-}
-
-//Eliminate quotations between the end and the beginning, to remove informative lines in lyrics
-void strip_quotations(std::string &s) {
-	std::string retval;
-	bool deleting = false;
-	for (size_t i = 0; i < s.size(); i++) {
-		if (s[i] == '"') deleting = true;
-		else if (s[i] == '"') deleting = false;
-		else if (!deleting) retval.push_back(s[i]);
-	}
-	s = retval;
-}
 
 //The logo if figlet is not installed on the local machine (ie: Windows and Mac and some unix machines)
 void logo(){

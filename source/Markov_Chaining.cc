@@ -1,4 +1,5 @@
 #include "headers/Markov_Chaining.hpp"
+
 //Index Overload: Gets the value at a index using the [] operator
 Vertex& Markov_Chaining::operator[](size_t index) {
 	return graph.at(index);
@@ -12,6 +13,7 @@ std::ostream& operator<<(std::ostream &outs, const Markov_Chaining &m) {
 	outs << "\n\tTotal Start Count: " << m.total_start_count << std::endl;
 	return outs;
 }
+
 //Private function: Basically Turns the constructor into a overrated helper
 bool Markov_Chaining::cache_check(std::string filename) {
 	source_file = filename;
@@ -129,6 +131,7 @@ Markov_Chaining::Markov_Chaining(std::string filename) {
 	//Build the graph then!
 	build_graph(filename);
 }
+
 //The Sentence generation, 
 void Markov_Chaining::sentence_generation(){
 		const int sentences = read("\tHow many sentences do you wish to make? ");
@@ -245,17 +248,63 @@ void Markov_Chaining::recover_graph(){
 	}
 	//Sanity check that we read in at least one sentence
 	if (total_start_count == 0) {
-		std::cout << "\tNo sentences read, exiting program......" << std::endl;
+		std::cout << "\tNo sentences read, exiting program. . . . .." << std::endl;
 		exit(1);
 	}
 }
 
 void Markov_Chaining::stats_graph(){ 
-	//Traverse and pick the most common word,
+	
+	//most common word to begin with.
+	Edge common_beginning;
+	//most common edge
+	Edge common_edge;
+	//Has the most edges
+	Edge greatest_weight; 
+	//most common word,
+	Edge common_word;
 	//most common ending word,
-	//followed by a comma the most often,
-	//and most common word to begin with.
+	Edge common_ending; 
+
+	//Traverse and pick
+	for(Vertex &v : graph) {
+		if(common_beginning.word.empty()) 
+			common_beginning.word = v.word, common_beginning.weight = v.start_count;
+		if(greatest_weight.word.empty()) 
+			greatest_weight.word = v.word, greatest_weight.weight = v.total_edge_weight;
+		if(common_ending.word.empty()) 
+			common_ending.word = v.word, common_ending.weight = (v.count - v.total_edge_weight);
+		if(common_word.word.empty()) 
+			common_word.word = v.word, common_word.weight = v.count;
+
+		if((v.count - v.total_edge_weight) > common_ending.weight) 
+			common_ending.word = v.word, common_ending.weight = (v.count - v.total_edge_weight);
+		if(v.start_count > common_beginning.weight) 
+			common_beginning.word = v.word, common_beginning.weight = v.start_count;
+		if(v.total_edge_weight > greatest_weight.weight) 
+			greatest_weight.word = v.word, greatest_weight.weight = v.total_edge_weight;
+		if(v.count > common_word.weight) 
+			common_word.word = v.word, common_word.weight = v.count;
+
+		for(Edge &e : v.edges) {
+			if(common_edge.word.empty()) common_edge.word = e.word, common_edge.weight = e.weight;
+			if(e.weight > common_edge.weight) common_edge.word = e.word, common_edge.weight = e.weight;
+		}
+	}
+	std::cout << std::endl;
+	std::cout << "\tThe most common word: '" << common_word.word 
+			  << "' with a count of: " << common_word.weight << "!\n";
+	std::cout << "\tThe most word with the most weight: '" << greatest_weight.word 
+			  << "' with a total edge weight of: " << greatest_weight.weight << "!\n";
+	std::cout << "\tThe most common beginning word: '" << common_beginning.word 
+			  << "' with a start count of: " << common_beginning.weight << "!\n";
+	std::cout << "\tThe most common ending word: '" << common_ending.word 
+			  << "' with a count of: " << common_ending.weight << "!\n";
+	std::cout << "\tThe most edge word: '" << common_edge.word 
+			  << "' with a count of: " << common_edge.weight << "!\n";
+	std::cout << std::endl;
 }
+
 void main_menu(Markov_Chaining &markov){
 	bool breakLoop = true;
 	while(breakLoop) {
@@ -264,7 +313,8 @@ void main_menu(Markov_Chaining &markov){
 		std::cout << "\t3. Save graph\n";
 		std::cout << "\t4. To clear the screen\n";
 		std::cout << "\t5. Combine files\n";
-		std::cout << "\t6. Exit Program\n";
+		std::cout << "\t6. Show graph stats\n";
+		std::cout << "\t7. Exit Program\n";
 		int choice = read("\tSelect one of the options above: ");
 		switch (choice)
 		{
@@ -286,6 +336,9 @@ void main_menu(Markov_Chaining &markov){
 				markov.build_graph(filehandler());
 				break;
 			case 6:
+				markov.stats_graph();
+				break;
+			case 7:
 				std::cout << "\n\tExiting..." << std::endl;
 				breakLoop = false;
 				break;

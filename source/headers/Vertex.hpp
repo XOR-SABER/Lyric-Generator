@@ -1,10 +1,13 @@
 #ifndef _ALEX_VERTEX
 #define _ALEX_VERTEX
 
-#include "Edge.hpp"
+//Standard Headers
 #include <string>
 #include <vector>
 #include <iostream>
+
+//Custom Headers
+#include "Edge.hpp"
 
 //Adjacency List style graph
 struct Vertex {

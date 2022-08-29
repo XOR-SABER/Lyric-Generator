@@ -15,6 +15,7 @@ int main(int argc, char* argv[]) {
 	screen_wipe();
 
 	//Constructor for the program
+	//init - initialize
 	Markov_Chaining Markov(filename);
 
 	//Menu function

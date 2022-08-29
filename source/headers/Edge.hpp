@@ -1,5 +1,7 @@
 #ifndef _ALEX_EDGE
 #define _ALEX_EDGE
+
+//Standard Headers
 #include <string>
 
 struct Edge {
