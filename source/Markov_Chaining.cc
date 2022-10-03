@@ -312,7 +312,7 @@ void Markov_Chaining::stats_graph(){
 void main_menu(Markov_Chaining &markov){
 	bool breakLoop = true;
 	while(breakLoop) {
-		std::cout << "\t1. Print Graph and Quit\n";
+		std::cout << "\t1. Print Graph\n";
 		std::cout << "\t2. Generate Random Lyrics\n";
 		std::cout << "\t3. Save graph\n";
 		std::cout << "\t4. To clear the screen\n";
