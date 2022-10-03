@@ -55,7 +55,7 @@ Uppercaseify all inputs, so Tomato and TOMATO and tomato are the same.
        2          1
 APPLE --> TOMATO --> PEACH
        1
-	  <--
+	<--
 </pre>
 
 APPLE started two lines, TOMATO started two lines. TOMATO ended two lines,
