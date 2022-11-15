@@ -10,7 +10,7 @@ std::ostream& operator<<(std::ostream &outs, const Markov_Chaining &m) {
 }
 
 //Private function: Basically Turns the constructor into a overrated helper
-bool Markov_Chaining::cache_check(std::string filename) {
+bool Markov_Chaining::cache_check(const std::string &filename) {
 	source_file = filename;
 	reverse_parse_filename(source_file);
 	std::string cache_file = "cache/";
@@ -33,7 +33,7 @@ bool Markov_Chaining::cache_check(std::string filename) {
 	return false;
 }
 
-void Markov_Chaining::build_graph(std::string filename) {
+void Markov_Chaining::build_graph(const std::string &filename) {
 	std::ifstream file(filename);
 	if (!file) {
 		std::cout << "File: " << filename << " doesn't exist." << std::endl;
@@ -57,24 +57,17 @@ void Markov_Chaining::build_graph(std::string filename) {
 			std::string word = read(sts); //Read a word from the line
 			if (!sts || !word.size()) break;
 			while (word.size() && word.back() == ',') {
+				std::cout << word << std::endl;
 				comma_follows = true;
 				word.pop_back();
 			}
-			if(word.back() == '"'){
-				word.pop_back();
-			}
-			if(word.front() == '"'){
-				word.erase(0,1);
-			}
-			while (word.size() && ispunct(word.back())) //Drop other punctuation from the end of the word
-				word.pop_back();
+			//Drop other punctuation from the end of the word
+			while (word.size() && ispunct(word.back())) word.pop_back();
 			if (!word.size()) continue; //If nothing left continue
-
 			//Look up index in the vector using a hash table
 			size_t index = 0;
-			if (hash.count(word)) { //Exists already
-				index = hash[word];
-			}
+			//Exists already
+			if (hash.count(word)) index = hash[word];
 			else { //Make the new vertex
 				Vertex v = {word};
 				graph.push_back(v);
@@ -117,7 +110,7 @@ void Markov_Chaining::build_graph(std::string filename) {
 }
 
 //File Parsing AKA: Markovify
-Markov_Chaining::Markov_Chaining(std::string filename) {
+Markov_Chaining::Markov_Chaining(const std::string &filename) {
 	//Check for cache! if cache exist and the user accepts stops the constructor
 	if(cache_check(filename)) {
 		recover_graph();
@@ -128,7 +121,7 @@ Markov_Chaining::Markov_Chaining(std::string filename) {
 }
 
 //The Sentence generation, 
-void Markov_Chaining::sentence_generation(){
+void Markov_Chaining::sentence_generation() {
 		const int sentences = read("\tHow many sentences do you wish to make? ");
 		const int64_t sneed = read("\tPlease enter the random seed: ");
 			

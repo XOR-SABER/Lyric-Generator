@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 	//Constructor for the program
 	//init - initialize
 	Markov_Chaining Markov(filename);
-
+	
 	//Menu function
 	main_menu(Markov);
 	return 0;

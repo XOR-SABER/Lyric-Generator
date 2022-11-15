@@ -11,6 +11,7 @@ void tokenize(std::string &str) {
 		if (str[i] == '[' || str[i] == '(') deleting = true;
 		else if (str[i] == ']' || str[i] == ')') deleting = false;
 		else if (!deleting){
+			if(str[i] == '"') continue;
 			if(!invalidChar(str[i])) {
 			retval.push_back(std::toupper(str[i]));
 			}
@@ -51,7 +52,7 @@ void reverse_parse_filename(std::string &str) {
 
 
 //The logo if figlet is not installed on the local machine (ie: Windows and Mac and some unix machines)
-void logo(){
+const void logo(){
 	std::cout << std::endl;
 	std::cout << "+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+" << std::endl;
 	std::cout << "|  L    Y   Y RRRR  III  CCC      GGG  EEEE N   N EEEE RRRR   AA  TTTTTT  OOO  RRRR   |" << std::endl;
@@ -133,7 +134,7 @@ std::string filehandler() {
 
 
 //Wipes the Screen and displays the logo
-void screen_wipe(){
+const void screen_wipe(){
 	//Windows only lol!
 	#if defined __WIN64__ || __WIN32__
 	system("cls");

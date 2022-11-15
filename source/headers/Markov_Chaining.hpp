@@ -16,22 +16,21 @@
 //OOP: Markov Chaining with adjacency list
 class Markov_Chaining {
 	private:
-		//TODO: Replace with custom chaining hash
 		std::unordered_map<std::string ,size_t> hash; //Holds the index (in vec) of each word we've read
 		std::vector<Vertex> graph; //Holds each word and who it's connected to via adjacency list
 		std::string source_file; //Holds the source of the file. 
 		size_t total_start_count = 0; //Holds how many sentences we've read
 		bool combined = false;
-		bool cache_check(std::string);
+		bool cache_check(const std::string &);
 	public:
 		Markov_Chaining() = delete;
-		Markov_Chaining(std::string);
+		Markov_Chaining(const std::string &);
 		void save_file();
 		void recover_graph();
-		void build_graph(std::string);
+		void build_graph(const std::string &);
 		void stats_graph();
 		void sentence_generation();
-		size_t get_total_start_count() { return total_start_count; }
+		size_t get_total_start_count() const { return total_start_count; }
 		friend std::ostream &operator<<(std::ostream &outs, const Markov_Chaining &m);
 };
 

@@ -22,7 +22,7 @@ struct Vertex {
 	std::vector<Edge> edges; //Holds the words we're connected to, and how often they follow us, like {PEAR,3}
 };
 
-//Overloads,
+//Overloads: 
 std::ostream &operator<<(std::ostream &outs,const Edge &e);
 std::ostream &operator<<(std::ostream &outs,const Vertex &v);
 #endif

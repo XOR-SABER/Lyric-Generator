@@ -12,12 +12,12 @@
 
 
 //Function Prototypes: Behold the usefulness of passing by refrence!
-void logo();
-void screen_wipe();
-void tokenize(std::string&);
+const void logo();
+const void screen_wipe();
 void first_cap(std::string&);
 void parse_path(std::string&);
 void reverse_parse_filename(std::string&);
+void tokenize(std::string&);
 std::string filehandler();
 
 #endif

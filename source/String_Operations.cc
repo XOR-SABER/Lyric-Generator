@@ -1,14 +1,14 @@
 #include "headers/String_Operations.hpp"
 
 //Check for non-unicode characters
-bool invalidChar (char c) { 
+bool invalidChar (const char &c) { 
 	return !(c>= 0 && c<128); 
 }
 
 //Gets rid of any and all Unicode Characters
-void stripUnicode(std::string & str) { 
-    str.erase(std::remove_if(str.begin(),str.end(), invalidChar), str.end());  
-}
+void stripUnicode(std::string & s) { 
+    s.erase(std::remove_if(s.begin(), s.end(), invalidChar), s.end());  
+} 
 
 //Turn food -> FOOD
 void uppercaseify(std::string &s) {
@@ -21,7 +21,7 @@ void lowercaseify(std::string &s) {
 //Turn FOOD -> Food, for starting a sentence
 void first_cap(std::string &s) {
 	if (!s.size()) return;
-	for (char &c : s) c = std::tolower(c);
+	for (char &c : s) std::tolower(c);
 	s.at(0) = std::toupper(s.at(0));
 }
 

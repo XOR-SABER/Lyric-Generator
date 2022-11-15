@@ -6,7 +6,7 @@
 #include <string>
 #include <algorithm>
 
-bool invalidChar(char);
+bool invalidChar(const char &);
 void stripUnicode(std::string&);
 void uppercaseify(std::string&);
 void lowercaseify(std::string&);
