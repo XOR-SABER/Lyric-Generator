@@ -41,6 +41,7 @@ void Markov_Chaining::build_graph(const std::string &filename) {
 	}
 	//Load text from the file - uppercase each word read
     while (true) {
+		// Start of a new sentence.
 		std::string s = readline(file);
 		tokenize(s);
 		if (!file) break;
@@ -48,42 +49,44 @@ void Markov_Chaining::build_graph(const std::string &filename) {
 		std::stringstream sts(s);
 		bool first_word = true;
 		size_t last_index = INT_MAX;
+		// We combining 
 		if(!graph.empty()) {
 			combined = true;
 			last_index = graph.size()-1;
 		}
+		// Start of a new word.
 		while (true) {
 			bool comma_follows = false;
-			std::string word = read(sts); //Read a word from the line
+			std::string word = read(sts); // Read a word from the line
 			if (!sts || !word.size()) break;
 			while (word.size() && word.back() == ',') {
-				std::cout << word << std::endl;
 				comma_follows = true;
 				word.pop_back();
 			}
-			//Drop other punctuation from the end of the word
+			// Drop other punctuation from the end of the word
 			while (word.size() && ispunct(word.back())) word.pop_back();
 			if (!word.size()) continue; //If nothing left continue
-			//Look up index in the vector using a hash table
+			// Look up index in the vector using a hash table
 			size_t index = 0;
-			//Exists already
+			// Exists already
 			if (hash.count(word)) index = hash[word];
-			else { //Make the new vertex
-				Vertex v = {word};
-				graph.push_back(v);
+			else { // Make the new vertex
+				graph.emplace_back(Vertex{word});
 				index = graph.size()-1;
 				hash[word] = index;
 			}
-			Vertex &v = graph.at(index); //Grab reference to current vertex.
-			v.count++; //We've seen it one more time
+			Vertex &v = graph.at(index); // Grab reference to current vertex or a pointer would work too
+			v.count++; // We've seen it one more time
 			if (comma_follows) v.comma_count++;
 			if (first_word) {
+				// There's no previous
 				v.start_count++;
 				total_start_count++;
 				first_word = false;
 				last_index = index;
 			}
 			else {
+				// Check the previous
 				Vertex &prev_v = graph.at(last_index);
 				prev_v.total_edge_weight++;
 				bool found = false;
@@ -94,6 +97,7 @@ void Markov_Chaining::build_graph(const std::string &filename) {
 						break;
 					}
 				}
+				// Not found in edge adjacency list get pushed back idiot.
 				if (!found) {
 					prev_v.edges.push_back({word,1});
 				}
@@ -102,25 +106,25 @@ void Markov_Chaining::build_graph(const std::string &filename) {
 		}
 	}
 	file.close();
-	//Sanity check that we read in at least one sentence
-	if (total_start_count == 0) {
+	// Sanity check that we read in at least one sentence
+	if (!total_start_count) {
 		std::cout << "No sentences read, exiting program" << std::endl;
 		exit(1);
 	}
 }
 
-//File Parsing AKA: Markovify
+// File Parsing AKA: Markovify
 Markov_Chaining::Markov_Chaining(const std::string &filename) {
-	//Check for cache! if cache exist and the user accepts stops the constructor
+	// Check for cache! if cache exist and the user accepts stops the constructor
 	if(cache_check(filename)) {
 		recover_graph();
 		return;
 	}
-	//Build the graph then!
+	// Build the graph then!
 	build_graph(filename);
 }
 
-//The Sentence generation, 
+// The Sentence generation, 
 void Markov_Chaining::sentence_generation() {
 		const int sentences = read("\tHow many sentences do you wish to make? ");
 		const int64_t sneed = read("\tPlease enter the random seed: ");
@@ -141,22 +145,22 @@ void Markov_Chaining::sentence_generation() {
 			std::string temp = cur.word;
 			first_cap(temp);
 			std::cout << "\t" << temp;
-			//Generate sentence, since we have to 
+			// Generate sentence, since we have to 
 			while (true) {
-				//Roll to see if we end the sentence here or pick a random word
+				// Roll to see if we end the sentence here or pick a random word
 				int end_count = cur.count - cur.total_edge_weight;
 				roll = rand() % cur.count - end_count;
-				//Check for end first
+				// Check for end first
 				if (roll < 0) {
 					std::cout << "." << std::endl;
 					break;
 				}
-				//Make a separate random roll to see if we should emit a comma
+				// Make a separate random roll to see if we should emit a comma
 				int roll2 = rand() % cur.total_edge_weight - cur.comma_count;
 				if (roll2 < 0) std::cout << ',';
 
-				//If not the end, then randomly pick an edge to follow based on the weight
-				//Uses the first random roll to go through the rest of the weight
+				// If not the end, then randomly pick an edge to follow based on the weight
+				// Uses the first random roll to go through the rest of the weight
 				for (const Edge &e : cur.edges) {
 					roll -= e.weight;
 					if (roll < 0) {
@@ -178,7 +182,7 @@ void Markov_Chaining::save_file(){
 
 	std::ofstream outs(new_file);
 
-	//Very Simular to the overload for output
+	// Very Simular to the overload for output
 	for(const Vertex &v : graph) {
 		outs << v.word << " " 
 		<< v.count << " " 
@@ -198,7 +202,7 @@ void Markov_Chaining::save_file(){
 }
 
 void Markov_Chaining::recover_graph(){
-	//Assumes this is a new graph
+	// Assumes this is a new graph
 	std::string recovered_file = "cache/";
 	recovered_file += source_file;
 
@@ -215,7 +219,7 @@ void Markov_Chaining::recover_graph(){
 			total_start_count = int(read(sts));
 			break;
 		}
-		Vertex v;
+		Vertex v {main_word, int(read(sts)), int(read(sts)), int(read(sts)), int(read(sts))};
 		v.word = main_word;
 		v.count = int(read(sts));
 		v.total_edge_weight = int(read(sts));
@@ -223,7 +227,7 @@ void Markov_Chaining::recover_graph(){
 		v.comma_count = int(read(sts));
 		hash[main_word] = index;
 		index++;
-		//We getting edgy
+		// We getting edgy
 		while(true){
 			std::string edge_word = read(sts);
 			if(edge_word.empty()) break;
@@ -235,7 +239,7 @@ void Markov_Chaining::recover_graph(){
 		}
 		graph.push_back(v);
 	}
-	//Sanity check that we read in at least one sentence
+	// Sanity check that we read in at least one sentence
 	if (total_start_count == 0) {
 		std::cout << "\tNo sentences read, exiting program. . . . .." << std::endl;
 		exit(1);
@@ -243,29 +247,34 @@ void Markov_Chaining::recover_graph(){
 }
 
 void Markov_Chaining::stats_graph(){
-	//Using Edges, since its already a custom data type that holds a string and integer value
-	//most common word to begin with
+	// THIS CODE IS GROSS, I HATE IT, AM GOING TO KILL YOU, GIVE ME $200
+	// THIS CODE KILLED MY FAMILY, ALEX YOU DUMB FUCK PLEASE CHANGE THIS IN THE FUTURE. 
+	// ~ Future Alex
+
+	// This could be done at read time. 
+	// Using Edges, since its already a custom data type that holds a string and integer value
+	// most common word to begin with
 	Edge common_beginning;
 	common_beginning.word = graph[0].word;
 	common_beginning.weight = graph[0].start_count;
-	//most common edge
+	// most common edge
 	Edge common_edge;
 	common_edge.word = graph[0].edges[0].word;
 	common_edge.weight = graph[0].edges[0].weight;
-	//Has the most edges
+	// Has the most edges
 	Edge greatest_weight; 
 	greatest_weight.word = graph[0].word;
 	greatest_weight.weight = graph[0].total_edge_weight;
-	//most common word
+	// most common word
 	Edge common_word;
 	common_word.word = graph[0].word;
 	common_word.weight = graph[0].count;
-	//most common ending word
+	// most common ending word
 	Edge common_ending; 
 	common_ending.word = graph[0].word;
 	common_ending.weight = (graph[0].count - graph[0].total_edge_weight);
 
-	//Traverse and pick
+	// Traverse and pick
 	for(Vertex &v : graph) {
 		if((v.count - v.total_edge_weight) > common_ending.weight) {
 			common_ending.word = v.word;
@@ -313,6 +322,7 @@ void main_menu(Markov_Chaining &markov){
 		std::cout << "\t6. Show graph stats\n";
 		std::cout << "\t7. Exit Program\n";
 		int choice = read("\tSelect one of the options above: ");
+		//
 		switch (choice)
 		{
 			case 1:

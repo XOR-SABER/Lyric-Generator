@@ -20,8 +20,8 @@ void lowercaseify(std::string &s) {
 }
 //Turn FOOD -> Food, for starting a sentence
 void first_cap(std::string &s) {
-	if (!s.size()) return;
-	for (char &c : s) std::tolower(c);
+	if (s.empty()) return;
+	for (char &c : s) c = std::tolower(c);
 	s.at(0) = std::toupper(s.at(0));
 }
 
