@@ -208,17 +208,34 @@ be able to use it again for the adding the new graph.
 ## 9. Use a graph with adjacency lists
 
 ```C++
+//OOP: Markov Chaining with adjacency list
 class Markov_Chaining {
 	private:
-		//TODO: Replace with custom chaining hash
 		std::unordered_map<std::string ,size_t> hash; //Holds the index (in vec) of each word we've read
 		std::vector<Vertex> graph; //Holds each word and who it's connected to via adjacency list
 		std::string source_file; //Holds the source of the file. 
 		size_t total_start_count = 0; //Holds how many sentences we've read
 		bool combined = false;
-		bool cache_check(std::string);
+		bool cache_check(const std::string &);
+	public:
+		Markov_Chaining() = delete;
+		Markov_Chaining(const std::string &);
+		void save_file();
+		void recover_graph();
+		void build_graph(const std::string &);
+		void stats_graph();
+		void sentence_generation();
+		size_t get_total_start_count() const { return total_start_count; }
+		friend std::ostream &operator<<(std::ostream &outs, const Markov_Chaining &m);
 };
 ```
 
 Using a vector of vertexes, use it like a adjacency list to hold the edges we are connected to. this is a 
 graph theory problem overall, and using this methology would help with the program. 
+
+## Acknowledgements
+
+ - [Read.h](https://github.com/ShakaUVM/read) "The best header known to man, to someday be in standard"
+ - [Markov Chaining (to generate Fake Alex Jones)](https://youtu.be/DK_R1iMb9Wk)
+
+Thank you, Professor Kerney for one of my favorite programing assignments, I can't wait to use this on my own students some day. 
