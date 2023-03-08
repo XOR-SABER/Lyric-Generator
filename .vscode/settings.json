@@ -70,6 +70,7 @@
         "deque": "cpp",
         "functional": "cpp",
         "queue": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "regex": "cpp"
     }
 }

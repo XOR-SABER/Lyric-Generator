@@ -5,11 +5,6 @@ bool invalidChar (const char &c) {
 	return !(c>= 0 && c<128); 
 }
 
-//Gets rid of any and all Unicode Characters
-void stripUnicode(std::string & s) { 
-    s.erase(std::remove_if(s.begin(), s.end(), invalidChar), s.end());  
-} 
-
 //Turn food -> FOOD
 void uppercaseify(std::string &s) {
 	for (char &c : s) c = std::toupper(c);

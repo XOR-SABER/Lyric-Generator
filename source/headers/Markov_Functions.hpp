@@ -17,7 +17,7 @@ const void screen_wipe();
 void first_cap(std::string&);
 void parse_path(std::string&);
 void reverse_parse_filename(std::string&);
-void tokenize(std::string&);
+std::string tokenize(const std::string&);
 std::string filehandler();
 
 #endif

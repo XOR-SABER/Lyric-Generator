@@ -3,14 +3,13 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+	// Todo: do more CMD args..
+
 	std::string filename;
 	//Check for Arguments
-	if(argc > 1) {
-		filename = argv[1];
-	} else {
-		//No Args?
-		filename = filehandler();
-	}
+	if(argc > 1) filename = argv[1];
+	else filename = filehandler();
+
 	// Just a function to wipe the screen
 	screen_wipe();
 

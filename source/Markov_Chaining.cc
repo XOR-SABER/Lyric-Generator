@@ -42,8 +42,7 @@ void Markov_Chaining::build_graph(const std::string &filename) {
 	//Load text from the file - uppercase each word read
     while (true) {
 		// Start of a new sentence.
-		std::string s = readline(file);
-		tokenize(s);
+		std::string s = tokenize(readline(file));
 		if (!file) break;
 		if (!s.size()) continue;
 		std::stringstream sts(s);
@@ -219,12 +218,8 @@ void Markov_Chaining::recover_graph(){
 			total_start_count = int(read(sts));
 			break;
 		}
-		Vertex v {main_word, int(read(sts)), int(read(sts)), int(read(sts)), int(read(sts))};
-		v.word = main_word;
-		v.count = int(read(sts));
-		v.total_edge_weight = int(read(sts));
-		v.start_count = int(read(sts));
-		v.comma_count = int(read(sts));
+		// We really don't need to check if any of the data is in invalid if we generate the data ourselves. 
+		Vertex v {main_word, uint32_t(read(sts)), uint32_t(read(sts)), uint32_t(read(sts)), uint32_t(read(sts))};
 		hash[main_word] = index;
 		index++;
 		// We getting edgy

@@ -4,20 +4,29 @@
 //Utility functions for changing the case on words
 
 // Any way fuck that helper function, here's the O(N) one
-void tokenize(std::string &str) {
+std::string tokenize(const std::string &str) {
 	std::string retval;
+	retval.reserve(str.size());
 	bool deleting = false;
 	for (size_t i = 0; i < str.size(); i++) {
-		if (str[i] == '[' || str[i] == '(') deleting = true;
-		else if (str[i] == ']' || str[i] == ')') deleting = false;
-		else if (!deleting){
+		switch (str[i]) {
+			case '[':
+			case '(':
+				deleting = true;
+				break;
+			case ']':
+			case ')':
+				deleting = false;
+				break;
+		}
+		if (!deleting){
 			if(str[i] == '"') continue;
 			if(!invalidChar(str[i])) {
 			retval.push_back(std::toupper(str[i]));
 			}
 		}
 	}
-	str = retval;
+	return retval;
 }
 
 //Turn misc/mario.txt -> misc/

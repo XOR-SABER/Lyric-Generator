@@ -7,7 +7,6 @@
 #include <algorithm>
 
 bool invalidChar(const char &);
-void stripUnicode(std::string&);
 void uppercaseify(std::string&);
 void lowercaseify(std::string&);
 void strip_brackets(std::string&);

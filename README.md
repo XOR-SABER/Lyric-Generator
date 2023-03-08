@@ -76,7 +76,7 @@ process a bit faster.
 
 So the process of reading goes like this, 
 1. Take a whole line.
-2. Strip all Quotations, Brackets, parentheses.
+2. Strip all Quotations, Brackets, parentheses, and get rid of the words inbetween them.
 3. Remove punctuation, commas, periods, exclmation points, etc.
 4. Keep track if it has a comma with comma count, and if it starts or ends a sentance. 
 5. Its splits here. If its new, we start at 6, if we seen it before we keep the index and stop here. 
