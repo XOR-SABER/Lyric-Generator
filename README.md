@@ -5,6 +5,34 @@
 Lyric Generator is a C++ program, that takes a .txt file of lyrics and generates 
 a new set of lyrics using markov chains. 
 
+## Installation
+### Prerequisites
+#### Windows:
+- A C++ compiler (e.g., MinGW-w64) 
+- Make (e.g., GNU Make for Windows)
+#### macOS:
+- Xcode command-line tools
+#### Linux:
+- GCC or Clang compiler
+- Make
+
+### Installation Steps
+
+#### Windows:
+1. Install required tools: Ensure you have MinGW-w64 and GNU Make installed.
+2. Open a terminal: Open a command prompt or Git Bash.
+3. Navigate to project directory: cd path/to/your/project
+4. Run make: make
+
+#### macOS:
+1. Install Xcode command-line tools: Open a Terminal and run xcode-select --install.
+2. Navigate to project directory: cd path/to/your/project
+3. Run make: make
+
+#### Linux:
+1. Install required tools: Ensure you have GCC or Clang and Make installed.
+2. Navigate to project directory: cd path/to/your/project
+
 ## What is a markov chain 
 
 A Markov Chain is a type of graph in which each vertex represents a word, and
