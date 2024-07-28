@@ -1,7 +1,7 @@
 # Lyric Generator
-
+<div align="center">
 <img src="imgs\img1.png"></img>
-
+</div>
 Lyric Generator is a C++ program, that takes a .txt file of lyrics and generates 
 a new set of lyrics using markov chains. 
 
@@ -21,17 +21,18 @@ a new set of lyrics using markov chains.
 #### Windows:
 1. Install required tools: Ensure you have MinGW-w64 and GNU Make installed.
 2. Open a terminal: Open a command prompt or Git Bash.
-3. Navigate to project directory: cd path/to/your/project
+3. Navigate to project /bin/ directory.
 4. Run make: make
 
 #### macOS:
 1. Install Xcode command-line tools: Open a Terminal and run xcode-select --install.
-2. Navigate to project directory: cd path/to/your/project
+2. Navigate to project /bin/ directory.
 3. Run make: make
 
 #### Linux:
 1. Install required tools: Ensure you have GCC or Clang and Make installed.
-2. Navigate to project directory: cd path/to/your/project
+2. Navigate to project /bin/ directory.
+3. Run make: make
 
 ## What is a markov chain 
 
@@ -40,9 +41,9 @@ the edges (directed and weighted) coming out of each vertex indicate how often
 the other word came from that word. We load the graph using data from a corpus
 of text, and the graph we get at the end of it can be used to generate new
 sentences in the style of whatever we trained it with.
-
-<img src="imgs\MarkovDiagram.png"></img>
-
+<div align="center">
+	<img src="imgs\MarkovDiagram.png"></img>
+</div>
 Markov chain is a specific type of finite state machine that is used to model 
 probabilistic processes. Both Markov chains and finite state machines have a 
 finite set of states and transitions between those states, but the difference 
@@ -121,7 +122,9 @@ This creates the graph, using a adjacency list method.
 
 And finally prining the graph to the screen
 
+<div align="center">
 <img src="imgs\img3print.png"></img>
+</div>
 
 ## 2. Generating Random Sentences
 
@@ -163,8 +166,9 @@ Move on to the next sentence, and you'll all done.
 The whole point of generating these cache files is to minimize the time needed to
 use the data, it ususaly faster to use data that is already formated and ready to be inserted
 into the graph than creating new data
-
+<div align="center">
 <img src="imgs/img4cache.png"></img>
+</div>
 
 ## 4. Generate stats for the graph
 
@@ -174,9 +178,9 @@ The whole goal of this function of the program is to show and describe the graph
 3. The most common ending word
 4. the most common word
 5. the most common edge word 
-
+<div align="center">
 <img src="imgs/img5stats.png"></img>
-
+</div>
 ## 5. Implement using object oriented programming
 
 I personally have nothing to show for my CSCI-41, class which is the class where you learn how to 
@@ -225,9 +229,9 @@ std::ostream& operator<<(std::ostream &outs, const Markov_Chaining &m) {
 
 using filesystem which isn't covered in any of the computer science classes, 
 plus a nifty looking file explorer would be cool to implement. 
-
+<div align="center">
 <img src="imgs\img7files.png"></img>
-
+</div>
 ## 8. Combine graphs
 
 this part came from a issue I had with not being able to combine graphs for easy use, so I can get bigger data sets. which is baiscally the same as the contructor for the graph, but I had to use it a private function to 
