@@ -269,5 +269,3 @@ graph theory problem overall, and using this methology would help with the progr
 
  - [Read.h](https://github.com/ShakaUVM/read) "The best header known to man, to someday be in standard"
  - [Markov Chaining (to generate Fake Alex Jones)](https://youtu.be/DK_R1iMb9Wk)
-
-Thank you, Professor Kerney for one of my favorite programing assignments, I can't wait to use this on my own students some day. 
