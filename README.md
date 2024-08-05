@@ -181,6 +181,7 @@ The whole goal of this function of the program is to show and describe the graph
 <div align="center">
 <img src="imgs/img5stats.png"></img>
 </div>
+
 ## 5. Implement using object oriented programming
 
 I personally have nothing to show for my CSCI-41, class which is the class where you learn how to 
@@ -232,6 +233,7 @@ plus a nifty looking file explorer would be cool to implement.
 <div align="center">
 <img src="imgs\img7files.png"></img>
 </div>
+
 ## 8. Combine graphs
 
 this part came from a issue I had with not being able to combine graphs for easy use, so I can get bigger data sets. which is baiscally the same as the contructor for the graph, but I had to use it a private function to 
