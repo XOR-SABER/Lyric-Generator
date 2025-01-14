@@ -3,6 +3,7 @@
 
 //Standard Headers
 #include <cctype>
+#include <vector>
 #include <iostream>
 #include <filesystem>
 
